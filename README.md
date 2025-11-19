@@ -4,54 +4,45 @@ Application web complète pour la gestion des réservations de salles, emprunts 
 
 ## 🚀 Stack technique
 
-- **Frontend**: React + TypeScript + Vite + Tailwind CSS
-- **Backend**: Node.js + Express + TypeScript
-- **Données**: Stockage en mémoire (tableaux TypeScript)
+- **Framework**: Next.js 16 (App Router) + React 19 + TypeScript
+- **Styling**: Tailwind CSS 4
+- **UI Components**: Radix UI
+- **State Management**: Zustand
+- **Form Handling**: React Hook Form + Zod
+- **Icons**: Lucide React
+- **Données**: Stockage en mémoire (Zustand store)
 
 ## 📋 Prérequis
 
 - Node.js (version 18 ou supérieure)
-- npm ou yarn
+- npm, yarn ou pnpm
 
 ## 🛠️ Installation et lancement
 
-### Backend
-
-1. Naviguez dans le dossier backend :
+1. Clonez le dépôt et naviguez dans le dossier :
 ```bash
-cd backend
+cd campusBook
 ```
 
 2. Installez les dépendances :
 ```bash
 npm install
+# ou
+yarn install
+# ou
+pnpm install
 ```
 
-3. Lancez le serveur de développement :
+3. Lancez l'application en mode développement :
 ```bash
 npm run dev
+# ou
+yarn dev
+# ou
+pnpm dev
 ```
 
-Le serveur backend sera accessible sur `http://localhost:5000`
-
-### Frontend
-
-1. Dans un nouveau terminal, naviguez dans le dossier frontend :
-```bash
-cd frontend
-```
-
-2. Installez les dépendances :
-```bash
-npm install
-```
-
-3. Lancez l'application :
-```bash
-npm run dev
-```
-
-L'application frontend sera accessible sur `http://localhost:3000`
+L'application sera accessible sur `http://localhost:3000`
 
 ## 📱 Utilisation
 
@@ -97,43 +88,45 @@ L'application frontend sera accessible sur `http://localhost:3000`
 ## 📊 Données factices
 
 L'application est pré-remplie avec des données factices :
-- 7 salles
-- 12 équipements
-- 7 enseignants
+- 5 salles (Salle A101, Salle B203, Labo Informatique, Salle de Réunion, Studio Multimédia)
+- 6 équipements (MacBook Pro, Caméra Canon, Microphone, Projecteur, iPad Pro, Kit d'éclairage)
+- 4 enseignants (Prof. Jean Martin, Dr. Sophie Leclerc, M. Pierre Dubois, Mme. Claire Bernard)
 - Quelques réservations existantes
 
 ## 🔧 Scripts disponibles
 
-### Backend
-- `npm run dev` : Lance le serveur en mode développement avec rechargement automatique
-- `npm run build` : Compile le TypeScript
-- `npm start` : Lance le serveur compilé
-
-### Frontend
-- `npm run dev` : Lance l'application en mode développement
+- `npm run dev` : Lance l'application en mode développement avec rechargement automatique
 - `npm run build` : Compile l'application pour la production
-- `npm run preview` : Prévisualise la version de production
+- `npm start` : Lance l'application compilée en mode production
+- `npm run lint` : Vérifie le code avec ESLint
 
 ## 📁 Structure du projet
 
 ```
 campusBook/
-├── backend/
-│   ├── src/
-│   │   ├── index.ts      # Point d'entrée du serveur
-│   │   ├── types.ts      # Types TypeScript
-│   │   └── data.ts       # Données factices
-│   ├── package.json
-│   └── tsconfig.json
-├── frontend/
-│   ├── src/
-│   │   ├── components/   # Composants React
-│   │   ├── pages/        # Pages de l'application
-│   │   ├── context/      # Contextes React
-│   │   ├── api/          # Client API
-│   │   └── types.ts      # Types TypeScript
-│   ├── package.json
-│   └── vite.config.ts
+├── app/                   # Pages Next.js (App Router)
+│   ├── appointments/      # Pages de rendez-vous
+│   ├── equipment/         # Pages d'équipements
+│   ├── profile/           # Page profil utilisateur
+│   ├── rooms/             # Pages de salles
+│   ├── layout.tsx         # Layout principal
+│   ├── page.tsx           # Page d'accueil (Dashboard)
+│   └── globals.css        # Styles globaux
+├── components/            # Composants React réutilisables
+│   ├── ui/               # Composants UI (Radix UI)
+│   ├── navigation.tsx    # Navigation principale
+│   ├── mobile-navigation.tsx
+│   └── theme-provider.tsx
+├── lib/                   # Utilitaires et logique métier
+│   ├── types.ts          # Types TypeScript
+│   ├── store.ts          # Store Zustand (état global)
+│   ├── mock-data.ts      # Données factices
+│   └── utils.ts          # Fonctions utilitaires
+├── hooks/                 # Hooks React personnalisés
+├── public/                # Assets statiques
+├── package.json
+├── tsconfig.json
+├── next.config.mjs
 └── README.md
 ```
 
@@ -143,15 +136,18 @@ Toutes les exigences fonctionnelles (EXIG-FONC-01 à EXIG-FONC-18) et non foncti
 
 ## 📝 Notes
 
-- Les données sont stockées en mémoire et seront réinitialisées à chaque redémarrage du serveur
-- Aucune authentification complexe : simple sélection de profil
+- Les données sont stockées en mémoire (Zustand store) et seront réinitialisées à chaque rechargement de la page
+- Aucune authentification complexe : simple sélection de profil utilisateur
 - Les réservations sont validées automatiquement selon les disponibilités
 - L'annulation est possible jusqu'à 24h avant le créneau
+- Application full-stack monolithique avec Next.js (pas de backend séparé)
+- Support du mode sombre/clair via next-themes
 
 ## 🐛 Dépannage
 
 Si vous rencontrez des problèmes :
 
-1. Vérifiez que les ports 3000 (frontend) et 5000 (backend) sont libres
-2. Assurez-vous que le backend est lancé avant le frontend
-3. Vérifiez que toutes les dépendances sont installées (`npm install` dans chaque dossier)
+1. Vérifiez que le port 3000 est libre
+2. Assurez-vous que toutes les dépendances sont installées (`npm install`)
+3. Vérifiez que vous utilisez Node.js version 18 ou supérieure
+4. En cas d'erreur de build, essayez de supprimer `.next` et `node_modules`, puis réinstallez les dépendances
