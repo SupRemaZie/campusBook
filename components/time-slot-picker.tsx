@@ -50,7 +50,8 @@ export function TimeSlotPicker({
     if (!date) return false
     
     const now = new Date()
-    const dateStr = date.toISOString().split('T')[0]
+    const tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+    const dateStr = tempDate.toISOString().split('T')[0]
     const todayStr = now.toISOString().split('T')[0]
     
     // If the selected date is not today, it's not in the past (already handled by calendar)
@@ -65,7 +66,8 @@ export function TimeSlotPicker({
   const isSlotReserved = (slotStart: string, slotEnd: string) => {
     if (!date) return false
     
-    const dateStr = date.toISOString().split('T')[0]
+    const tempDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+    const dateStr = tempDate.toISOString().split('T')[0]
     const slotStartDateTime = new Date(`${dateStr}T${slotStart}`)
     const slotEndDateTime = new Date(`${dateStr}T${slotEnd}`)
     
