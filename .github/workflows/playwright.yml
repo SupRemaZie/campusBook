@@ -20,11 +20,20 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Start application
-      run: npm start &
+      run: |
+        npm start &
+        echo $! > app.pid
     - name: Wait for application
-      run: npx wait-on http://localhost:3000 --timeout 60000
+      run: |
+        timeout 60 bash -c 'until curl -f http://localhost:3000; do sleep 2; done'
     - name: Run Playwright tests
       run: npx playwright test
+    - name: Stop application
+      if: always()
+      run: |
+        if [ -f app.pid ]; then
+          kill $(cat app.pid) || true
+        fi
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
