@@ -66,6 +66,36 @@ export default function BookRoomPage() {
     const requestedStart = new Date(`${dateStr}T${selectedStartTime}`)
     const requestedEnd = new Date(`${dateStr}T${selectedEndTime}`)
     
+    // Validation: vérifier que l'heure de fin est après l'heure de début
+    if (requestedEnd <= requestedStart) {
+      toast({
+        title: "Erreur",
+        description: "L'heure de fin doit être après l'heure de début",
+        variant: "destructive"
+      })
+      return
+    }
+    
+    // Validation: vérifier les conflits avec les réservations existantes
+    const hasConflict = roomReservations.some(res => {
+      if (res.roomId !== room.id) return false
+      
+      const resStart = new Date(res.timeSlot.start)
+      const resEnd = new Date(res.timeSlot.end)
+      
+      // Vérifier si les créneaux se chevauchent
+      return (requestedStart < resEnd && requestedEnd > resStart)
+    })
+    
+    if (hasConflict) {
+      toast({
+        title: "Créneau indisponible",
+        description: "Ce créneau est déjà réservé. Veuillez choisir un autre horaire.",
+        variant: "destructive"
+      })
+      return
+    }
+    
     const reservation = {
       id: `res-${Date.now()}`,
       roomId: room.id,

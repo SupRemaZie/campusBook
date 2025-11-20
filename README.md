@@ -46,7 +46,7 @@ L'application sera accessible sur `http://localhost:3000`
 
 ## 📱 Utilisation
 
-1. **Sélection du profil** : Au chargement de l'application, sélectionnez votre profil (Étudiant ou Enseignant) dans le menu déroulant en haut à droite.
+1. **Sélection du profil** : Au chargement de l'application, sélectionnez votre profil (Étudiant ou Enseignant) dans le menu déroulant en haut à droite (desktop) ou au-dessus de la navigation mobile.
 
 2. **Navigation** : Utilisez le menu de navigation pour accéder aux différentes sections :
    - **Dashboard** : Vue d'ensemble des réservations et disponibilités
@@ -64,9 +64,10 @@ L'application sera accessible sur `http://localhost:3000`
 - Calendrier des réservations par salle
 
 ### Gestion des équipements
-- Catalogue des équipements disponibles
-- Statut de disponibilité en temps réel
-- Emprunt avec durée maximale
+- Catalogue des équipements disponibles avec catégories
+- Statut de disponibilité calculé dynamiquement en temps réel
+- Emprunt avec durée maximale par équipement
+- Validation des conflits de réservation
 - Historique des emprunts
 
 ### Rendez-vous avec enseignants
@@ -76,9 +77,10 @@ L'application sera accessible sur `http://localhost:3000`
 - Suivi des rendez-vous planifiés
 
 ### Espace utilisateur
-- Historique complet des réservations
-- Réservations à venir
-- Annulation de réservations (si plus de 24h avant)
+- Historique complet des réservations (salles, équipements, rendez-vous)
+- Réservations à venir avec distinction visuelle
+- Annulation de réservations avec règle des 24h (impossible si moins de 24h avant)
+- Modification du profil utilisateur (Étudiant/Enseignant)
 
 ### Dashboard
 - Vue synthétique des prochaines réservations
@@ -87,11 +89,11 @@ L'application sera accessible sur `http://localhost:3000`
 
 ## 📊 Données factices
 
-L'application est pré-remplie avec des données factices :
-- 5 salles (Salle A101, Salle B203, Labo Informatique, Salle de Réunion, Studio Multimédia)
-- 6 équipements (MacBook Pro, Caméra Canon, Microphone, Projecteur, iPad Pro, Kit d'éclairage)
-- 4 enseignants (Prof. Jean Martin, Dr. Sophie Leclerc, M. Pierre Dubois, Mme. Claire Bernard)
-- Quelques réservations existantes
+L'application est pré-remplie avec des données factices cohérentes :
+- **10 salles** : Salle A101, Salle B203, Labo Informatique, Salle de Réunion, Studio Multimédia, Salle C305, Bibliothèque - Espace Silencieux, Salle de Conférence, Labo Électronique, Atelier Créatif
+- **18 équipements** : MacBook Pro, Caméra Canon, Microphone, Projecteur, iPad Pro, Kit d'éclairage, PC Portable Dell, Caméra GoPro, Enceinte Bluetooth, Tablette Graphique Wacom, Micro-cravate, Drone DJI, Écran Externe, Mixeur Audio, Trépied, Casque Audio, Scanner 3D, Stabilisateur Gimbal
+- **10 enseignants** : Prof. Jean Martin (Développement Web), Dr. Sophie Leclerc (IA), M. Pierre Dubois (Design UX/UI), Mme. Claire Bernard (Gestion de Projet), Prof. Marc Lefebvre (Base de données), Dr. Anne Moreau (Sécurité), M. Thomas Rousseau (Architecture), Mme. Julie Petit (Marketing Digital), Prof. Laurent Girard (Réseaux), Dr. Émilie Durand (Data Science)
+- Quelques réservations existantes pour démonstration
 
 ## 🔧 Scripts disponibles
 

@@ -17,16 +17,30 @@ import { useToast } from '@/hooks/use-toast'
 export default function BookEquipmentPage() {
   const params = useParams<{ id: string }>()
   const id = params.id
-  const eq = equipment.find(e => e.id === id)
+  const baseEq = equipment.find(e => e.id === id)
   const router = useRouter()
   const { toast } = useToast()
-  const { addEquipmentReservation, currentUser } = useAppStore()
+  const { addEquipmentReservation, currentUser, equipmentReservations } = useAppStore()
   
   const [startDate, setStartDate] = useState<string>()
   const [endDate, setEndDate] = useState<string>()
   
-  if (!eq) {
+  if (!baseEq) {
     notFound()
+  }
+  
+  // Calculate availability dynamically
+  const now = new Date()
+  const isReserved = equipmentReservations.some(res => {
+    if (res.equipmentId !== baseEq.id) return false
+    const start = new Date(res.startDate)
+    const end = new Date(res.endDate)
+    return now >= start && now <= end
+  })
+  
+  const eq = {
+    ...baseEq,
+    available: !isReserved
   }
   
   const handleRangeSelect = (start: string, end: string) => {
@@ -55,15 +69,43 @@ export default function BookEquipmentPage() {
       return
     }
     
-    // Check duration
+    // Check for conflicts with existing reservations
     const start = new Date(startDate)
     const end = new Date(endDate)
+    
+    const hasConflict = equipmentReservations.some(res => {
+      if (res.equipmentId !== eq.id) return false
+      const resStart = new Date(res.startDate)
+      const resEnd = new Date(res.endDate)
+      // Check if date ranges overlap
+      return (start <= resEnd && end >= resStart)
+    })
+    
+    if (hasConflict) {
+      toast({
+        title: "Période indisponible",
+        description: "Cet équipement est déjà réservé pour cette période",
+        variant: "destructive"
+      })
+      return
+    }
+    
+    // Check duration
     const durationDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
     
     if (durationDays > eq.maxDuration) {
       toast({
         title: "Durée trop longue",
         description: `La durée maximale d'emprunt est de ${eq.maxDuration} jours`,
+        variant: "destructive"
+      })
+      return
+    }
+    
+    if (durationDays <= 0) {
+      toast({
+        title: "Date invalide",
+        description: "La date de fin doit être après la date de début",
         variant: "destructive"
       })
       return

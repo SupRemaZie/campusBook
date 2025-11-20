@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Navigation } from '@/components/navigation'
 import { MobileNavigation } from '@/components/mobile-navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,17 +15,39 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { equipment } from '@/lib/mock-data'
+import { useAppStore } from '@/lib/store'
 import { Package, Search, Calendar } from 'lucide-react'
 import Link from 'next/link'
 
 export default function EquipmentPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const { equipmentReservations } = useAppStore()
+  
+  // Calculate equipment availability dynamically
+  const equipmentWithAvailability = useMemo(() => {
+    const now = new Date()
+    return equipment.map(eq => {
+      // Check if equipment is currently reserved
+      const isReserved = equipmentReservations.some(res => {
+        if (res.equipmentId !== eq.id) return false
+        const startDate = new Date(res.startDate)
+        const endDate = new Date(res.endDate)
+        // Equipment is reserved if current date is between start and end
+        return now >= startDate && now <= endDate
+      })
+      
+      return {
+        ...eq,
+        available: !isReserved
+      }
+    })
+  }, [equipmentReservations])
   
   // Get unique categories
   const categories = Array.from(new Set(equipment.map(eq => eq.category)))
   
-  const filteredEquipment = equipment.filter(eq => {
+  const filteredEquipment = equipmentWithAvailability.filter(eq => {
     const matchesSearch = eq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       eq.description.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = categoryFilter === 'all' || eq.category === categoryFilter

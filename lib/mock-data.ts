@@ -41,6 +41,36 @@ export const rooms: Room[] = [
     name: 'Studio Multimédia',
     capacity: 15,
     description: 'Équipement photo/vidéo professionnel'
+  },
+  {
+    id: 'room-6',
+    name: 'Salle C305',
+    capacity: 30,
+    description: 'Salle de cours standard avec tableau interactif'
+  },
+  {
+    id: 'room-7',
+    name: 'Bibliothèque - Espace Silencieux',
+    capacity: 50,
+    description: 'Espace de travail silencieux avec prises électriques'
+  },
+  {
+    id: 'room-8',
+    name: 'Salle de Conférence',
+    capacity: 60,
+    description: 'Grande salle pour conférences et présentations'
+  },
+  {
+    id: 'room-9',
+    name: 'Labo Électronique',
+    capacity: 12,
+    description: 'Laboratoire équipé pour travaux pratiques électroniques'
+  },
+  {
+    id: 'room-10',
+    name: 'Atelier Créatif',
+    capacity: 18,
+    description: 'Espace pour projets créatifs et artistiques'
   }
 ]
 
@@ -93,6 +123,102 @@ export const equipment: Equipment[] = [
     maxDuration: 3,
     available: false,
     category: 'Photo/Vidéo'
+  },
+  {
+    id: 'eq-7',
+    name: 'PC Portable Dell XPS 15',
+    description: 'Ordinateur portable performant pour développement et design',
+    maxDuration: 7,
+    available: true,
+    category: 'Informatique'
+  },
+  {
+    id: 'eq-8',
+    name: 'Caméra GoPro Hero 12',
+    description: 'Caméra d\'action pour captation vidéo dynamique',
+    maxDuration: 5,
+    available: true,
+    category: 'Photo/Vidéo'
+  },
+  {
+    id: 'eq-9',
+    name: 'Enceinte Bluetooth JBL',
+    description: 'Enceinte portable pour présentations et événements',
+    maxDuration: 3,
+    available: true,
+    category: 'Audio'
+  },
+  {
+    id: 'eq-10',
+    name: 'Tablette Graphique Wacom',
+    description: 'Tablette graphique pour illustration et design numérique',
+    maxDuration: 7,
+    available: true,
+    category: 'Informatique'
+  },
+  {
+    id: 'eq-11',
+    name: 'Micro-cravate sans fil',
+    description: 'Microphone cravate pour présentations et enregistrements',
+    maxDuration: 2,
+    available: true,
+    category: 'Audio'
+  },
+  {
+    id: 'eq-12',
+    name: 'Drone DJI Mini 3',
+    description: 'Drone compact pour prises de vue aériennes',
+    maxDuration: 3,
+    available: true,
+    category: 'Photo/Vidéo'
+  },
+  {
+    id: 'eq-13',
+    name: 'Écran Externe 27"',
+    description: 'Écran haute résolution pour travail multimédia',
+    maxDuration: 5,
+    available: true,
+    category: 'Informatique'
+  },
+  {
+    id: 'eq-14',
+    name: 'Mixeur Audio 8 canaux',
+    description: 'Table de mixage pour enregistrements audio professionnels',
+    maxDuration: 4,
+    available: false,
+    category: 'Audio'
+  },
+  {
+    id: 'eq-15',
+    name: 'Trépied Manfrotto',
+    description: 'Trépied professionnel pour caméras et appareils photo',
+    maxDuration: 5,
+    available: true,
+    category: 'Photo/Vidéo'
+  },
+  {
+    id: 'eq-16',
+    name: 'Casque Audio Sennheiser',
+    description: 'Casque audio professionnel pour mixage et montage',
+    maxDuration: 7,
+    available: true,
+    category: 'Audio'
+  },
+  {
+    id: 'eq-17',
+    name: 'Scanner 3D',
+    description: 'Scanner 3D pour numérisation d\'objets',
+    maxDuration: 5,
+    available: true,
+    category: 'Informatique'
+  },
+  {
+    id: 'eq-18',
+    name: 'Stabilisateur Gimbal',
+    description: 'Stabilisateur pour caméras et smartphones',
+    maxDuration: 3,
+    available: true,
+    category: 'Photo/Vidéo'
   }
 ]
 
@@ -121,6 +247,42 @@ export const teachers: Teacher[] = [
     name: 'Mme. Claire Bernard',
     email: 'c.bernard@campus.fr',
     speciality: 'Gestion de Projet'
+  },
+  {
+    id: 'teacher-5',
+    name: 'Prof. Marc Lefebvre',
+    email: 'm.lefebvre@campus.fr',
+    speciality: 'Base de données'
+  },
+  {
+    id: 'teacher-6',
+    name: 'Dr. Anne Moreau',
+    email: 'a.moreau@campus.fr',
+    speciality: 'Sécurité Informatique'
+  },
+  {
+    id: 'teacher-7',
+    name: 'M. Thomas Rousseau',
+    email: 't.rousseau@campus.fr',
+    speciality: 'Architecture Logicielle'
+  },
+  {
+    id: 'teacher-8',
+    name: 'Mme. Julie Petit',
+    email: 'j.petit@campus.fr',
+    speciality: 'Marketing Digital'
+  },
+  {
+    id: 'teacher-9',
+    name: 'Prof. Laurent Girard',
+    email: 'l.girard@campus.fr',
+    speciality: 'Réseaux et Systèmes'
+  },
+  {
+    id: 'teacher-10',
+    name: 'Dr. Émilie Durand',
+    email: 'e.durand@campus.fr',
+    speciality: 'Data Science'
   }
 ]
 

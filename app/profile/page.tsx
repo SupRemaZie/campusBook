@@ -77,8 +77,75 @@ export default function ProfilePage() {
   const upcomingAppointments = myAppointments.filter(a => new Date(a.timeSlot.start) > now)
   const pastAppointments = myAppointments.filter(a => new Date(a.timeSlot.start) <= now)
   
+  const canCancel = (type: 'room' | 'equipment' | 'appointment', id: string): { canCancel: boolean; reason?: string } => {
+    const now = new Date()
+    const hours24 = 24 * 60 * 60 * 1000
+    
+    if (type === 'room') {
+      const reservation = myRoomReservations.find(r => r.id === id)
+      if (!reservation) return { canCancel: false, reason: 'Réservation introuvable' }
+      
+      const reservationStart = new Date(reservation.timeSlot.start)
+      const timeUntilReservation = reservationStart.getTime() - now.getTime()
+      
+      if (timeUntilReservation < hours24) {
+        return { 
+          canCancel: false, 
+          reason: 'L\'annulation doit être effectuée au moins 24h avant le créneau' 
+        }
+      }
+      return { canCancel: true }
+    }
+    
+    if (type === 'equipment') {
+      const reservation = myEquipmentReservations.find(r => r.id === id)
+      if (!reservation) return { canCancel: false, reason: 'Réservation introuvable' }
+      
+      const reservationStart = new Date(reservation.startDate)
+      const timeUntilReservation = reservationStart.getTime() - now.getTime()
+      
+      if (timeUntilReservation < hours24) {
+        return { 
+          canCancel: false, 
+          reason: 'L\'annulation doit être effectuée au moins 24h avant le début de l\'emprunt' 
+        }
+      }
+      return { canCancel: true }
+    }
+    
+    if (type === 'appointment') {
+      const appointment = myAppointments.find(a => a.id === id)
+      if (!appointment) return { canCancel: false, reason: 'Rendez-vous introuvable' }
+      
+      const appointmentStart = new Date(appointment.timeSlot.start)
+      const timeUntilAppointment = appointmentStart.getTime() - now.getTime()
+      
+      if (timeUntilAppointment < hours24) {
+        return { 
+          canCancel: false, 
+          reason: 'L\'annulation doit être effectuée au moins 24h avant le rendez-vous' 
+        }
+      }
+      return { canCancel: true }
+    }
+    
+    return { canCancel: false }
+  }
+  
   const handleCancel = () => {
     if (!cancelDialog) return
+    
+    const { canCancel: canCancelReservation, reason } = canCancel(cancelDialog.type, cancelDialog.id)
+    
+    if (!canCancelReservation) {
+      toast({
+        title: "Annulation impossible",
+        description: reason || "Cette réservation ne peut pas être annulée",
+        variant: "destructive"
+      })
+      setCancelDialog(null)
+      return
+    }
     
     switch (cancelDialog.type) {
       case 'room':
@@ -176,20 +243,26 @@ export default function ProfilePage() {
                             </span>
                           </div>
                         </div>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          className="w-full mt-4"
-                          onClick={() => setCancelDialog({
-                            open: true,
-                            type: 'room',
-                            id: res.id,
-                            name: res.room?.name || 'la salle'
-                          })}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Annuler
-                        </Button>
+                        {(() => {
+                          const { canCancel: canCancelReservation } = canCancel('room', res.id)
+                          return (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              className="w-full mt-4"
+                              disabled={!canCancelReservation}
+                              onClick={() => setCancelDialog({
+                                open: true,
+                                type: 'room',
+                                id: res.id,
+                                name: res.room?.name || 'la salle'
+                              })}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              {canCancelReservation ? 'Annuler' : 'Annulation impossible (< 24h)'}
+                            </Button>
+                          )
+                        })()}
                       </CardContent>
                     </Card>
                   ))}
@@ -233,20 +306,26 @@ export default function ProfilePage() {
                             </span>
                           </div>
                         </div>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          className="w-full mt-4"
-                          onClick={() => setCancelDialog({
-                            open: true,
-                            type: 'equipment',
-                            id: res.id,
-                            name: res.equipment?.name || 'l\'équipement'
-                          })}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Annuler
-                        </Button>
+                        {(() => {
+                          const { canCancel: canCancelReservation } = canCancel('equipment', res.id)
+                          return (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              className="w-full mt-4"
+                              disabled={!canCancelReservation}
+                              onClick={() => setCancelDialog({
+                                open: true,
+                                type: 'equipment',
+                                id: res.id,
+                                name: res.equipment?.name || 'l\'équipement'
+                              })}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              {canCancelReservation ? 'Annuler' : 'Annulation impossible (< 24h)'}
+                            </Button>
+                          )
+                        })()}
                       </CardContent>
                     </Card>
                   ))}
@@ -309,20 +388,26 @@ export default function ProfilePage() {
                             </span>
                           </div>
                         </div>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          className="w-full mt-4"
-                          onClick={() => setCancelDialog({
-                            open: true,
-                            type: 'appointment',
-                            id: appt.id,
-                            name: `le rendez-vous avec ${appt.teacher?.name}`
-                          })}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Annuler
-                        </Button>
+                        {(() => {
+                          const { canCancel: canCancelReservation } = canCancel('appointment', appt.id)
+                          return (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              className="w-full mt-4"
+                              disabled={!canCancelReservation}
+                              onClick={() => setCancelDialog({
+                                open: true,
+                                type: 'appointment',
+                                id: appt.id,
+                                name: `le rendez-vous avec ${appt.teacher?.name}`
+                              })}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              {canCancelReservation ? 'Annuler' : 'Annulation impossible (< 24h)'}
+                            </Button>
+                          )
+                        })()}
                       </CardContent>
                     </Card>
                   ))}

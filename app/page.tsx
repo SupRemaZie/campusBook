@@ -24,7 +24,19 @@ export default function DashboardPage() {
     .filter(a => a.userId === currentUser.id && new Date(a.timeSlot.start) > now)
   
   const availableRooms = rooms.slice(0, 3)
-  const availableEquipment = equipment.filter(eq => eq.available).slice(0, 3)
+  
+  // Calculate equipment availability dynamically
+  const equipmentWithAvailability = equipment.map(eq => {
+    const isReserved = equipmentReservations.some(res => {
+      if (res.equipmentId !== eq.id) return false
+      const startDate = new Date(res.startDate)
+      const endDate = new Date(res.endDate)
+      return now >= startDate && now <= endDate
+    })
+    return { ...eq, available: !isReserved }
+  })
+  const availableEquipment = equipmentWithAvailability.filter(eq => eq.available).slice(0, 3)
+  
   const nextTeacherSlots = teachers.slice(0, 3).map(teacher => ({
     teacher,
     nextSlot: getTeacherAvailability(teacher.id)[0]

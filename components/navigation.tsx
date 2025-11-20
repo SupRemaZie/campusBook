@@ -4,6 +4,15 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { BookOpen, Calendar, Package, Users, UserCircle } from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useAppStore } from '@/lib/store'
+import { UserRole } from '@/lib/types'
 
 const navItems = [
   {
@@ -35,6 +44,14 @@ const navItems = [
 
 export function Navigation() {
   const pathname = usePathname()
+  const { currentUser, setCurrentUser } = useAppStore()
+  
+  const handleRoleChange = (role: UserRole) => {
+    setCurrentUser({
+      ...currentUser,
+      role
+    })
+  }
   
   return (
     <nav className="border-b border-border bg-card">
@@ -45,7 +62,7 @@ export function Navigation() {
             <span className="text-balance">Campus Book</span>
           </Link>
           
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-4">
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href
@@ -66,6 +83,16 @@ export function Navigation() {
                 </Link>
               )
             })}
+            
+            <Select value={currentUser.role} onValueChange={handleRoleChange}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="student">Étudiant</SelectItem>
+                <SelectItem value="teacher">Enseignant</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
