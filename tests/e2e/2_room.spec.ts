@@ -17,10 +17,11 @@ test.describe('Room', () => {
         await roomPage.checkRoomReservation();
     });
     test('book a room', async ({ roomPage }) => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1;
-        const day = date.getDate();
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const year = tomorrow.getFullYear();
+        const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const day = String(tomorrow.getDate()).padStart(2, '0');
         const dateStr = `${year}-${month}-${day}`;
         await roomPage.bookRoom(dateStr, '17:00', '18:00', 'Work group project');
     });
