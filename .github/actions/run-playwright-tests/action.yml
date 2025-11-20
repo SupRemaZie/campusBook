@@ -25,13 +25,5 @@ runs:
           npx playwright test ./tests/e2e/1_*.spec.ts
         elif [ "${{ inputs.shard }}" = "2/6" ]; then
           npx playwright test ./tests/e2e/2_*.spec.ts
-        elif [ "${{ inputs.shard }}" = "3/6" ]; then
-          npx playwright test ./tests/e2e/3_*.spec.ts
-        elif [ "${{ inputs.shard }}" = "4/6" ]; then
-          npx playwright test ./tests/e2e/4_*.spec.ts
-        elif [ "${{ inputs.shard }}" = "5/6" ]; then
-          npx playwright test ./tests/e2e/5_*.spec.ts
-        elif [ "${{ inputs.shard }}" = "6/6" ]; then
-          npx playwright test ./tests/e2e/6_*.spec.ts
         fi
 
