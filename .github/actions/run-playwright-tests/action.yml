@@ -18,6 +18,10 @@ runs:
         mkdir -p blob-report
         mkdir -p screenshots
 
+    - name: Run unit tests
+      shell: bash
+      run: npm run test
+
     - name: Run Playwright tests
       shell: bash
       run: |

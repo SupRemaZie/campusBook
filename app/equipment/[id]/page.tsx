@@ -13,6 +13,7 @@ import { ArrowLeft, Package } from 'lucide-react'
 import Link from 'next/link'
 import { notFound, useRouter, useParams } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
+import { getReservationDurationInDays, hasEquipmentReservationConflict, isTimeRangeValid } from '@/lib/validation'
 
 export default function BookEquipmentPage() {
   const params = useParams<{ id: string }>()
@@ -73,13 +74,21 @@ export default function BookEquipmentPage() {
     const start = new Date(startDate)
     const end = new Date(endDate)
     
-    const hasConflict = equipmentReservations.some(res => {
-      if (res.equipmentId !== eq.id) return false
-      const resStart = new Date(res.startDate)
-      const resEnd = new Date(res.endDate)
-      // Check if date ranges overlap
-      return (start <= resEnd && end >= resStart)
-    })
+    if (!isTimeRangeValid(start, end)) {
+      toast({
+        title: "Date invalide",
+        description: "La date de fin doit être après la date de début",
+        variant: "destructive"
+      })
+      return
+    }
+    
+    const hasConflict = hasEquipmentReservationConflict(
+      equipmentReservations,
+      eq.id,
+      start,
+      end
+    )
     
     if (hasConflict) {
       toast({
@@ -91,21 +100,12 @@ export default function BookEquipmentPage() {
     }
     
     // Check duration
-    const durationDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+    const durationDays = getReservationDurationInDays(start, end)
     
     if (durationDays > eq.maxDuration) {
       toast({
         title: "Durée trop longue",
         description: `La durée maximale d'emprunt est de ${eq.maxDuration} jours`,
-        variant: "destructive"
-      })
-      return
-    }
-    
-    if (durationDays <= 0) {
-      toast({
-        title: "Date invalide",
-        description: "La date de fin doit être après la date de début",
         variant: "destructive"
       })
       return

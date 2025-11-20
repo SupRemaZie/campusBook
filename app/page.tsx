@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { rooms, equipment, teachers, getTeacherAvailability } from '@/lib/mock-data'
 import { useAppStore } from '@/lib/store'
+import { getAvailableEquipment, getAvailableRooms, getEquipmentWithAvailability, getNextTeacherSlots, getUpcomingAppointments, getUpcomingEquipmentReservations, getUpcomingRoomReservations } from '@/lib/dashboard'
 import { Calendar, Package, Users, Clock, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
@@ -16,31 +17,17 @@ export default function DashboardPage() {
   // Get user's upcoming reservations
   const now = new Date()
   
-  const myRoomReservations = roomReservations
-    .filter(r => r.userId === currentUser.id && new Date(r.timeSlot.start) > now)
-  const myEquipmentReservations = equipmentReservations
-    .filter(r => r.userId === currentUser.id && new Date(r.endDate) >= now)
-  const myAppointments = appointments
-    .filter(a => a.userId === currentUser.id && new Date(a.timeSlot.start) > now)
+  const myRoomReservations = getUpcomingRoomReservations(roomReservations, currentUser.id, now)
+  const myEquipmentReservations = getUpcomingEquipmentReservations(equipmentReservations, currentUser.id, now)
+  const myAppointments = getUpcomingAppointments(appointments, currentUser.id, now)
   
-  const availableRooms = rooms.slice(0, 3)
+  const availableRooms = getAvailableRooms(rooms)
   
   // Calculate equipment availability dynamically
-  const equipmentWithAvailability = equipment.map(eq => {
-    const isReserved = equipmentReservations.some(res => {
-      if (res.equipmentId !== eq.id) return false
-      const startDate = new Date(res.startDate)
-      const endDate = new Date(res.endDate)
-      return now >= startDate && now <= endDate
-    })
-    return { ...eq, available: !isReserved }
-  })
-  const availableEquipment = equipmentWithAvailability.filter(eq => eq.available).slice(0, 3)
+  const equipmentWithAvailability = getEquipmentWithAvailability(equipment, equipmentReservations, now)
+  const availableEquipment = getAvailableEquipment(equipmentWithAvailability)
   
-  const nextTeacherSlots = teachers.slice(0, 3).map(teacher => ({
-    teacher,
-    nextSlot: getTeacherAvailability(teacher.id)[0]
-  }))
+  const nextTeacherSlots = getNextTeacherSlots(teachers, getTeacherAvailability)
   
   return (
     <div className="min-h-screen bg-background">
