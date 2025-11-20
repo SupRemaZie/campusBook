@@ -21,6 +21,7 @@ import { useAppStore } from '@/lib/store'
 import { Calendar, Package, Users, Clock, MapPin, Trash2, UserCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
+import { canCancelBeforeThreshold } from '@/lib/validation'
 
 export default function ProfilePage() {
   const { 
@@ -79,16 +80,14 @@ export default function ProfilePage() {
   
   const canCancel = (type: 'room' | 'equipment' | 'appointment', id: string): { canCancel: boolean; reason?: string } => {
     const now = new Date()
-    const hours24 = 24 * 60 * 60 * 1000
     
     if (type === 'room') {
       const reservation = myRoomReservations.find(r => r.id === id)
       if (!reservation) return { canCancel: false, reason: 'Réservation introuvable' }
       
       const reservationStart = new Date(reservation.timeSlot.start)
-      const timeUntilReservation = reservationStart.getTime() - now.getTime()
       
-      if (timeUntilReservation < hours24) {
+      if (!canCancelBeforeThreshold(reservationStart, now)) {
         return { 
           canCancel: false, 
           reason: 'L\'annulation doit être effectuée au moins 24h avant le créneau' 
@@ -102,9 +101,8 @@ export default function ProfilePage() {
       if (!reservation) return { canCancel: false, reason: 'Réservation introuvable' }
       
       const reservationStart = new Date(reservation.startDate)
-      const timeUntilReservation = reservationStart.getTime() - now.getTime()
       
-      if (timeUntilReservation < hours24) {
+      if (!canCancelBeforeThreshold(reservationStart, now)) {
         return { 
           canCancel: false, 
           reason: 'L\'annulation doit être effectuée au moins 24h avant le début de l\'emprunt' 
@@ -118,9 +116,8 @@ export default function ProfilePage() {
       if (!appointment) return { canCancel: false, reason: 'Rendez-vous introuvable' }
       
       const appointmentStart = new Date(appointment.timeSlot.start)
-      const timeUntilAppointment = appointmentStart.getTime() - now.getTime()
       
-      if (timeUntilAppointment < hours24) {
+      if (!canCancelBeforeThreshold(appointmentStart, now)) {
         return { 
           canCancel: false, 
           reason: 'L\'annulation doit être effectuée au moins 24h avant le rendez-vous' 

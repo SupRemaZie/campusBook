@@ -14,6 +14,7 @@ import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { notFound, useRouter, useParams } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
+import { hasRoomReservationConflict, isTimeRangeValid } from '@/lib/validation'
 
 export default function BookRoomPage() {
   const params = useParams<{ id: string }>()
@@ -67,7 +68,7 @@ export default function BookRoomPage() {
     const requestedEnd = new Date(`${dateStr}T${selectedEndTime}`)
     
     // Validation: vérifier que l'heure de fin est après l'heure de début
-    if (requestedEnd <= requestedStart) {
+    if (!isTimeRangeValid(requestedStart, requestedEnd)) {
       toast({
         title: "Erreur",
         description: "L'heure de fin doit être après l'heure de début",
@@ -77,15 +78,12 @@ export default function BookRoomPage() {
     }
     
     // Validation: vérifier les conflits avec les réservations existantes
-    const hasConflict = roomReservations.some(res => {
-      if (res.roomId !== room.id) return false
-      
-      const resStart = new Date(res.timeSlot.start)
-      const resEnd = new Date(res.timeSlot.end)
-      
-      // Vérifier si les créneaux se chevauchent
-      return (requestedStart < resEnd && requestedEnd > resStart)
-    })
+    const hasConflict = hasRoomReservationConflict(
+      roomReservations,
+      room.id,
+      requestedStart,
+      requestedEnd
+    )
     
     if (hasConflict) {
       toast({

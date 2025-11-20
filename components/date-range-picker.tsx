@@ -5,6 +5,8 @@ import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { DateRange } from 'react-day-picker'
+import { clampRangeToMaxDuration, formatDateInput } from '@/lib/scheduling'
+import { getReservationDurationInDays } from '@/lib/validation'
 
 interface DateRangePickerProps {
   maxDuration: number
@@ -33,26 +35,15 @@ export function DateRangePicker({
     
     // If both dates are selected, check duration
     if (newRange.from && newRange.to) {
-      const durationDays = Math.ceil(
-        (newRange.to.getTime() - newRange.from.getTime()) / (1000 * 60 * 60 * 24)
-      )
+      const durationDays = getReservationDurationInDays(newRange.from, newRange.to)
       
-      const formatDate = (date: Date) => {
-        const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day = String(date.getDate()).padStart(2, '0')
-        return `${year}-${month}-${day}`
-      }
-
       if (durationDays > maxDuration) {
-        // Adjust end date to max duration
-        const adjustedEnd = new Date(newRange.from)
-        adjustedEnd.setDate(adjustedEnd.getDate() + maxDuration)
-        setRange({ from: newRange.from, to: adjustedEnd })
+        const adjustedRange = clampRangeToMaxDuration(newRange, maxDuration)
+        setRange(adjustedRange)
         
         onSelectRange(
-          formatDate(newRange.from),
-          formatDate(adjustedEnd)
+          formatDateInput(adjustedRange.from),
+          adjustedRange.to ? formatDateInput(adjustedRange.to) : formatDateInput(adjustedRange.from)
         )
         return
       }
@@ -61,26 +52,16 @@ export function DateRangePicker({
     setRange(newRange)
     
     if (newRange.from && newRange.to) {
-      const formatDate = (date: Date) => {
-        const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day = String(date.getDate()).padStart(2, '0')
-        return `${year}-${month}-${day}`
-      }
-
       onSelectRange(
-        formatDate(newRange.from),
-        formatDate(newRange.to)
+        formatDateInput(newRange.from),
+        formatDateInput(newRange.to)
       )
     }
   }
   
-  const getDurationDays = () => {
-    if (!range?.from || !range?.to) return 0
-    return Math.ceil((range.to.getTime() - range.from.getTime()) / (1000 * 60 * 60 * 24))
-  }
-  
-  const durationDays = getDurationDays()
+  const durationDays = range?.from && range?.to
+    ? getReservationDurationInDays(range.from, range.to)
+    : 0
   
   return (
     <Card>
