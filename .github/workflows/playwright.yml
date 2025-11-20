@@ -1,34 +1,59 @@
 name: Playwright Tests
+
 on:
-  push:
-    branches: [ main, dev ]
   pull_request:
     branches: [ main, dev ]
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ["1/6", "2/6"]
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm install --legacy-peer-deps
-    - name: Build application
-      run: npm run build
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Start application
-      run: |
-        npm start > /dev/null 2>&1 &
-        sleep 5
-        timeout 60 bash -c 'until curl -f http://localhost:3000 > /dev/null 2>&1; do sleep 2; done'
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      
+      - name: Build application
+        run: npm run build
+      
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      
+      - name: Start application
+        run: |
+          npm start > /dev/null 2>&1 &
+          sleep 5
+          timeout 60 bash -c 'until curl -f http://localhost:3000 > /dev/null 2>&1; do sleep 2; done'
+      
+      - name: Set shard name
+        id: shard-name
+        run: echo "name=$(echo '${{ matrix.shard }}' | tr '/' '-')" >> $GITHUB_OUTPUT
+      
+      - name: Run Playwright tests (shard ${{ matrix.shard }})
+        uses: ./.github/actions/run-playwright-tests
+        with:
+          shard: ${{ matrix.shard }}
+      
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-shard-${{ steps.shard-name.outputs.name }}
+          path: playwright-report/
+          retention-days: 30
+      
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: test-results-shard-${{ steps.shard-name.outputs.name }}
+          path: test-results/
+          retention-days: 30
