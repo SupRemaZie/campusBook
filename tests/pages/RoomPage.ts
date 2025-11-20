@@ -37,7 +37,7 @@ export class RoomPage {
         await this.checkRoomReservation();
         
         const [year, month, day] = date.split('-');
-        const dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        const dateObj = new Date(parseInt(year), parseInt(month), parseInt(day));
         // Use the day number as text content to find the button
         const dayNumber = dateObj.getDate().toString();
         const dayButton = this.page.getByRole('button', { name: dayNumber }).first();
