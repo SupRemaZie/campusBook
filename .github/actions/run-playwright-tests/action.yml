@@ -1,0 +1,37 @@
+name: "Run Playwright Tests"
+
+description: "Run Playwright tests based on shard configuration"
+
+inputs:
+  shard:
+    description: "Test shard to run (e.g., 1/6, 2/6, etc.)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create output directories
+      shell: bash
+      run: |
+        mkdir -p playwright-report
+        mkdir -p test-results
+        mkdir -p blob-report
+        mkdir -p screenshots
+
+    - name: Run Playwright tests
+      shell: bash
+      run: |
+        if [ "${{ inputs.shard }}" = "1/6" ]; then
+          npx playwright test ./tests/e2e/1_*.spec.ts
+        elif [ "${{ inputs.shard }}" = "2/6" ]; then
+          npx playwright test ./tests/e2e/2_*.spec.ts
+        elif [ "${{ inputs.shard }}" = "3/6" ]; then
+          npx playwright test ./tests/e2e/3_*.spec.ts
+        elif [ "${{ inputs.shard }}" = "4/6" ]; then
+          npx playwright test ./tests/e2e/4_*.spec.ts
+        elif [ "${{ inputs.shard }}" = "5/6" ]; then
+          npx playwright test ./tests/e2e/5_*.spec.ts
+        elif [ "${{ inputs.shard }}" = "6/6" ]; then
+          npx playwright test ./tests/e2e/6_*.spec.ts
+        fi
+
