@@ -17,6 +17,11 @@ test.describe('Room', () => {
         await roomPage.checkRoomReservation();
     });
     test('book a room', async ({ roomPage }) => {
-        await roomPage.bookRoom('2025-11-19', '17:00', '18:00', 'Work');
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const dateStr = `${year}-${month}-${day}`;
+        await roomPage.bookRoom(dateStr, '17:00', '18:00', 'Work group project');
     });
 });
