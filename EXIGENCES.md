@@ -1,0 +1,18 @@
+Campus Book
+Contexte
+L’école souhaite mettre en place une interface web unique permettant de réserver des salles, emprunter des équipements et prendre rendez-vous avec des tuteurs ou enseignants. Actuellement, ces trois services sont dispersés entre des formulaires papier, des échanges par mail et des outils non centralisés. L’objectif est de fournir un outil simple, rapide et centralisé qui optimise la gestion des ressources du campus.
+Objectifs du projet
+● Faciliter la réservation de salles pour les étudiants et personnels (travail de groupe, réunions, projets).
+● Permettre la location d’équipements (PC portables, caméras, micros, matériel audio, etc.).
+● Mettre en place un système de prise de rendez-vous avec des tuteurs/enseignants, avec visibilité des créneaux disponibles.
+● Centraliser toutes les réservations dans un même espace accessible.
+● Simplifier la communication et réduire les erreurs liées aux réservations.
+Exigences fonctionnelles
+EXIG-FONC-01 : L’application doit afficher la liste complète des salles disponibles, avec nom, capacité. EXIG-FONC-02 : L’utilisateur doit pouvoir sélectionner un créneau horaire pour réserver une salle. EXIG-FONC-03 : Le système doit valider ou refuser automatiquement une réservation selon la disponibilité du créneau. EXIG-FONC-04 : L’application doit afficher un calendrier des réservations pour chaque salle.
+EXIG-FONC-05 : L’application doit afficher un catalogue des équipements disponibles. EXIG-FONC-06 : Chaque équipement doit comporter une description, une disponibilité et une durée maximale d’emprunt. EXIG-FONC-07 : L’utilisateur doit pouvoir réserver un équipement via un formulaire simple. EXIG-FONC-08 : L’application doit afficher le statut de chaque équipement (disponible / emprunté).
+EXIG-FONC-09 : L’application doit afficher la liste des enseignants/tuteurs disponibles. EXIG-FONC-10 : Les disponibilités des enseignants doivent être présentées sous forme d’agenda. EXIG-FONC-11 : L’utilisateur doit pouvoir sélectionner un créneau pour un rendez-vous. EXIG-FONC-12 : L’utilisateur doit pouvoir suivre ou annuler un rendez-vous planifié.
+EXIG-FONC-13 : L’application doit proposer un espace utilisateur affichant l’historique des réservations. EXIG-FONC-14 : L’application doit afficher les réservations à venir de l’utilisateur. EXIG-FONC-15 : L’utilisateur doit pouvoir annuler ou modifier une réservation si autorisé par les règles du système.
+EXIG-FONC-16 : Le dashboard doit afficher une vue synthétique des prochaines réservations. EXIG-FONC-17 : Le dashboard doit afficher les salles et équipements actuellement disponibles. EXIG-FONC-18 : Le dashboard doit afficher les prochains créneaux libres pour les rendez-vous des enseignants.
+Exigences non fonctionnelles
+EXIG-NF-01 : Les données utilisées dans le MVP doivent être factices mais cohérentes. EXIG-NF-02 : Le système ne doit pas inclure d’authentification complexe, uniquement une sélection du profil (Étudiant/Enseignant). EXIG-NF-03 : Le système ne doit pas intégrer de workflow de validation avancée.
+EXIG-NF-04 : L’interface doit être intuitive et simple d’utilisation. EXIG-NF-05 : Le temps de chargement des pages doit être court. EXIG-NF-06 : L’application doit respecter un niveau minimum d’accessibilité (contraste, lisibilité). EXIG-NF-07 : Le code doit être maintenable et versionné via un dépôt Git. EXIG-NF-08 : L’application ne doit stocker aucune donnée personnelle sensible.
