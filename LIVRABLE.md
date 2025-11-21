@@ -237,6 +237,9 @@ Tous les rapports sont archivés dans le dossier `docs/` du dépôt (ou Notion p
 - Photo du Kanban **début du process** : ![](./debut.png)
 - Photo du Kanban **fin du process** : ![](./fin.png)
 - Workflow opérationnel : Backlog → Raffinage → Dev en cours → Tests → Prêt démo → Done (piloté par Lucas côté PM, synchronisé avec jalons QA hebdo).
+- Rapport de test playwright : ![report playwright dashboard](report-playwright-1.png)
+test : book à room 
+ ![report playwright details](report-playwright-2.png)
 
 ### Automatisation CI/CD
 - **Action composite GitHub** `.github/actions/run-playwright-tests/action.yml` :
