@@ -63,6 +63,43 @@ describe('validation helpers', () => {
     ).toBe(true)
   })
 
+  it('retourne false pour doTimeRangesOverlap si les plages horaires sont invalides', () => {
+    const invalidStart = new Date('invalid')
+    const invalidEnd = new Date('invalid')
+    const validStart = new Date('2025-01-10T09:00:00Z')
+    const validEnd = new Date('2025-01-10T10:00:00Z')
+
+    expect(
+      doTimeRangesOverlap(
+        { start: invalidStart, end: invalidEnd },
+        { start: validStart, end: validEnd }
+      )
+    ).toBe(false)
+
+    expect(
+      doTimeRangesOverlap(
+        { start: validStart, end: validEnd },
+        { start: invalidStart, end: invalidEnd }
+      )
+    ).toBe(false)
+
+    expect(
+      doTimeRangesOverlap(
+        { start: validEnd, end: validStart },
+        { start: validStart, end: validEnd }
+      )
+    ).toBe(false)
+  })
+
+  it('retourne false pour isTimeRangeValid si les dates sont invalides', () => {
+    const invalidDate = new Date('invalid')
+    const validDate = new Date('2025-01-10T09:00:00Z')
+
+    expect(isTimeRangeValid(invalidDate, validDate)).toBe(false)
+    expect(isTimeRangeValid(validDate, invalidDate)).toBe(false)
+    expect(isTimeRangeValid(invalidDate, invalidDate)).toBe(false)
+  })
+
   it('calcule la durée en jours en arrondissant vers le haut', () => {
     const start = new Date('2025-01-01T10:00:00Z')
     const end = new Date('2025-01-03T09:00:00Z')

@@ -33,5 +33,31 @@ describe('toast reducer', () => {
     const dismissed = reducer(state, { type: 'DISMISS_TOAST', toastId: '1' })
     expect(dismissed.toasts[0].open).toBe(false)
   })
+
+  it('supprime un toast spécifique avec REMOVE_TOAST', () => {
+    // TOAST_LIMIT est à 1, donc on ne peut avoir qu'un seul toast
+    const state = reducer(baseState, { type: 'ADD_TOAST', toast })
+    expect(state.toasts).toHaveLength(1)
+
+    const removed = reducer(state, { type: 'REMOVE_TOAST', toastId: '1' })
+    expect(removed.toasts).toHaveLength(0)
+  })
+
+  it('supprime tous les toasts avec REMOVE_TOAST sans toastId', () => {
+    const state = reducer(baseState, { type: 'ADD_TOAST', toast })
+    expect(state.toasts).toHaveLength(1)
+
+    const removedAll = reducer(state, { type: 'REMOVE_TOAST', toastId: undefined })
+    expect(removedAll.toasts).toHaveLength(0)
+  })
+
+  it('dismiss tous les toasts si toastId est undefined', () => {
+    const state = reducer(baseState, { type: 'ADD_TOAST', toast })
+    vi.spyOn(globalThis, 'setTimeout').mockReturnValue(0 as unknown as ReturnType<typeof setTimeout>)
+    
+    const dismissed = reducer(state, { type: 'DISMISS_TOAST', toastId: undefined })
+    expect(dismissed.toasts).toHaveLength(1)
+    expect(dismissed.toasts[0].open).toBe(false)
+  })
 })
 

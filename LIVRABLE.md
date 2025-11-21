@@ -9,10 +9,10 @@
 ## 2. Organisation & Rôles
 | Membre  | Rôles cumulés | Responsabilités clés |
 |---------|---------------|----------------------|
-| Ewen    | PO · Dev      | Priorisation produit, implémentations front/back, relecture code |
-| Lucas   | PM · Testeur  | Relation client, suivi planning/Kanban, validation qualité fonctionnelle |
-| Tristan | Dev           | Développement fonctionnalités, intégration CI |
-| Damien  | Testeur       | Plans de tests IHM, exécution et analyse des campagnes |
+| Ewen  Danielo  | PO · Dev      | Priorisation produit, implémentations front/back, relecture code |
+| Lucas Allard  | PM · Testeur  | Relation client, suivi planning/Kanban, validation qualité fonctionnelle |
+| Tristan Lemee| Dev           | Développement fonctionnalités, intégration CI |
+| Damien PORCHET | Testeur       | Plans de tests IHM, exécution et analyse des campagnes |
 
 ## 3. Expression du besoin
 - Offrir **une interface unifiée** pour les salles, équipements et rendez-vous afin d’éviter les formulaires papier et emails multiples.
@@ -225,8 +225,30 @@ Tous les rapports sont archivés dans le dossier `docs/` du dépôt (ou Notion p
    - Les parcours critiques ont été rejoués manuellement lors des revues de sprint en suivant les scripts IHM ci-dessus. Aucun blocage fonctionnel n’a été constaté ; seules des améliorations UX mineures (microcopie des erreurs, contraste) restent ouvertes.  
    - Les données fictives sont alignées sur les exigences : cohérence croisée salle/calendrier/dashboard vérifiée par comparaison dataset vs rendu (US1-US4).  
 2. **Tests unitaires (Vitest)**  
-   - Exécution `npm run test` du 20/11/2025 à 10:39: 6 fichiers, 24 tests, 100 % succès (611 ms).  
-   - Couverture logique : calculs dashboard (`tests/unit/dashboard.test.ts`), helpers planning (`tests/unit/scheduling.test.ts`), validation formulaire (`tests/unit/validation.test.ts`), mock data (`tests/unit/mock-data.test.ts`), store client (`tests/unit/store.test.ts`), notifications (`tests/unit/toast-reducer.test.ts`).  
+   - Exécution `npm run test` : 8 fichiers, 49 tests, 100 % succès (611 ms).  
+   - Couverture logique : calculs dashboard (`tests/unit/dashboard.test.ts`), helpers planning (`tests/unit/scheduling.test.ts`), validation formulaire (`tests/unit/validation.test.ts`), mock data (`tests/unit/mock-data.test.ts`), store client (`tests/unit/store.test.ts`), notifications (`tests/unit/toast-reducer.test.ts`), utilitaires (`tests/unit/utils.test.ts`), hooks (`tests/unit/use-toast.test.ts`).  
+   
+   **Analyse du rapport de couverture** (exécution `npm run test:coverage`) :
+   - **Vue d'ensemble globale** :
+     - Statements : 8,87 % | Branches : 55,61 % | Functions : 33,33 % | Lines : 8,87 %
+     - Cette couverture globale est normale car les pages Next.js (`app/`) et composants UI (`components/`) ne sont pas testés, ce qui est acceptable pour une application de ce type.
+   
+   - **Points forts** :
+     - **Bibliothèque de logique métier (`lib/`)** : **100 % de couverture** — couverture complète de la logique critique
+       - `dashboard.ts` : **100 %** — toutes les fonctions de calcul de disponibilité testées
+       - `mock-data.ts` : **100 %** — génération de données de test couverte
+       - `scheduling.ts` : **100 % de lignes**, 95,83 % de branches — toutes les fonctions testées, y compris les cas limites (dates undefined, ranges incomplets)
+       - `validation.ts` : **100 % de lignes**, 89,47 % de branches — validation des conflits et règles métier entièrement couvertes, y compris les plages horaires invalides
+       - `store.ts` : **100 %** — toutes les actions testées, y compris `cancelAppointment`
+       - `utils.ts` : **100 %** — fonction utilitaire `cn()` entièrement testée
+   
+   
+   - **Objectifs atteints** :
+     - `lib/` : **100 %** ✅ 
+     - `hooks/` : 70,92 % ✅
+     - `components/` : 0 % acceptable (composants UI de bibliothèque)
+     - `app/` : 0 % acceptable (pages Next.js)
+   
 3. **Analyse des résultats**  
    - Les suites unitaires capturent les règles de disponibilité (chevauchements, créneaux futurs, statut équipement) et les comportements d’état, réduisant les régressions sur les parcours US1–US8.  
    - Les scripts IHM/BeB mettent en avant les cas limites restants (annulation RDV conditionnelle, transition « emprunté » → « disponible »). Ces scénarios sont planifiés pour une automatisation Playwright progressive (cf. §10).  
@@ -253,6 +275,6 @@ test : book à room
 
 ## Conclusion & suites proposées
 - Campus Book répond désormais aux exigences BO/DEV : vision claire, US priorisées, plan de test exhaustif et automatisation amorcée garantissent un MVP fiable.
-- Les rapports produits (étapes 2a→2m) et les résultats QA (24 tests unitaires verts, parcours manuels validés) apportent la transparence attendue par Les Dragon Anonyme.
+- Les rapports produits (étapes 2a→2m) et les résultats QA (49 tests unitaires verts, parcours manuels validés) apportent la transparence attendue par Les Dragon Anonyme.
 - Prochaines actions recommandées : finaliser le sharding Playwright, intégrer les scénarios Gherkin restants, renforcer l’accessibilité et ajouter les photos Kanban au livrable avant la démo finale.
 

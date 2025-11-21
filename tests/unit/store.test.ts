@@ -79,7 +79,19 @@ describe('useAppStore actions', () => {
     expect(useAppStore.getState().appointments).toContain(appointment)
   })
 
-  it('change l’utilisateur courant', () => {
+  it('annule un rendez-vous', () => {
+    const appointment = createAppointment()
+    const originalCount = useAppStore.getState().appointments.length
+
+    useAppStore.getState().addAppointment(appointment)
+    expect(useAppStore.getState().appointments).toHaveLength(originalCount + 1)
+
+    useAppStore.getState().cancelAppointment(appointment.id)
+    expect(useAppStore.getState().appointments).toHaveLength(originalCount)
+    expect(useAppStore.getState().appointments).not.toContain(appointment)
+  })
+
+  it('change l\'utilisateur courant', () => {
     const newUser: User = {
       id: 'user-100',
       name: 'Testeur',

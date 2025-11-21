@@ -29,6 +29,28 @@ describe('scheduling helpers', () => {
     expect(isSlotReserved(date, { start: '12:00', end: '13:00' }, reservedSlots)).toBe(false)
   })
 
+  it('retourne false si la date est undefined dans isSlotReserved', () => {
+    const slot = { start: '10:00', end: '11:00' }
+    const reservedSlots = [
+      {
+        start: '2025-01-10T10:00:00',
+        end: '2025-01-10T12:00:00'
+      }
+    ]
+    expect(isSlotReserved(undefined, slot, reservedSlots)).toBe(false)
+  })
+
+  it('retourne false si la date est undefined dans isSlotInPast', () => {
+    const now = new Date('2025-01-02T10:30:00')
+    expect(isSlotInPast(undefined, '09:00', now)).toBe(false)
+  })
+
+  it('retourne false si la date n\'est pas aujourd\'hui dans isSlotInPast', () => {
+    const date = new Date('2025-01-01T09:00:00')
+    const now = new Date('2025-01-02T10:30:00')
+    expect(isSlotInPast(date, '09:00', now)).toBe(false)
+  })
+
   it('clamp la plage de dates à la durée maximale', () => {
     const range = {
       from: new Date('2025-01-01'),
@@ -37,6 +59,26 @@ describe('scheduling helpers', () => {
     const clamped = clampRangeToMaxDuration(range, 2)
     expect(formatDateInput(clamped.from!)).toBe('2025-01-01')
     expect(formatDateInput(clamped.to!)).toBe('2025-01-03')
+  })
+
+  it('retourne la plage inchangée si from ou to est undefined dans clampRangeToMaxDuration', () => {
+    const rangeWithoutFrom = { from: undefined, to: new Date('2025-01-05') }
+    expect(clampRangeToMaxDuration(rangeWithoutFrom, 2)).toEqual(rangeWithoutFrom)
+
+    const rangeWithoutTo = { from: new Date('2025-01-01'), to: undefined }
+    expect(clampRangeToMaxDuration(rangeWithoutTo, 2)).toEqual(rangeWithoutTo)
+
+    const rangeWithoutBoth = { from: undefined, to: undefined }
+    expect(clampRangeToMaxDuration(rangeWithoutBoth, 2)).toEqual(rangeWithoutBoth)
+  })
+
+  it('retourne la plage inchangée si la durée est déjà inférieure à la durée maximale', () => {
+    const range = {
+      from: new Date('2025-01-01'),
+      to: new Date('2025-01-02')
+    }
+    const clamped = clampRangeToMaxDuration(range, 3)
+    expect(clamped).toEqual(range)
   })
 
   it('détermine si un équipement est emprunté', () => {
@@ -52,6 +94,18 @@ describe('scheduling helpers', () => {
     ]
     expect(isEquipmentCurrentlyReserved(reservations, 'eq-1', new Date('2025-01-02'))).toBe(true)
     expect(isEquipmentCurrentlyReserved(reservations, 'eq-1', new Date('2025-01-05'))).toBe(false)
+  })
+
+  it('détecte les créneaux réservés avec des dates différentes', () => {
+    const date = new Date('2025-01-10T00:00:00')
+    const slot = { start: '10:00', end: '11:00' }
+    const reservedSlots = [
+      {
+        start: '2025-01-09T10:00:00',
+        end: '2025-01-09T12:00:00'
+      }
+    ]
+    expect(isSlotReserved(date, slot, reservedSlots)).toBe(false)
   })
 
   it('normalise les dates pour correspondre aux créneaux', () => {

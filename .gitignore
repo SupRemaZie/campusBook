@@ -40,3 +40,19 @@ Thumbs.db
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Coverage
+/coverage/
+coverage/
+
+# Python (si présent par erreur)
+__pycache__/
+*.pyc
+*.pyo
+
+# Lock files alternatifs (si on utilise npm)
+pnpm-lock.yaml
+yarn.lock
+
+# Rapports de test en images
+report-playwright-*.png
