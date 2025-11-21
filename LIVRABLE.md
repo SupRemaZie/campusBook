@@ -234,8 +234,8 @@ Tous les rapports sont archivés dans le dossier `docs/` du dépôt (ou Notion p
 
 ## 10. Workflow, Kanban & automatisation
 ### Kanban & suivi visuel
-- Photo du Kanban **début du process** : _à insérer ici par l’équipe_.
-- Photo du Kanban **fin du process** : _à insérer ici par l’équipe_.
+- Photo du Kanban **début du process** : ![](./debut.png)
+- Photo du Kanban **fin du process** : ![](./fin.png)
 - Workflow opérationnel : Backlog → Raffinage → Dev en cours → Tests → Prêt démo → Done (piloté par Lucas côté PM, synchronisé avec jalons QA hebdo).
 
 ### Automatisation CI/CD
